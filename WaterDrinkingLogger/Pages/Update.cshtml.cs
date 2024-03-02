@@ -5,14 +5,14 @@ using WaterDrinkingLogger.Models;
 
 namespace WaterDrinkingLogger.Pages;
 
-public class DeleteModel : PageModel
+public class UpdateModel : PageModel
 {
     private readonly IConfiguration _configuration;
 
     [BindProperty]
     public DrinkingWaterModel DrinkingWater { get; set; }
 
-    public DeleteModel(IConfiguration configuration)
+    public UpdateModel(IConfiguration configuration)
     {
         _configuration = configuration;
     }
@@ -53,14 +53,28 @@ public class DeleteModel : PageModel
         }
     }
 
-    public IActionResult OnPost(int id)
+    public IActionResult OnPost()
     {
-        SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnectionString"));
-        connection.Open();
-        string query = $"DELETE FROM drinking_water WHERE Id = {id}";
-        SqlCommand command = new(query, connection);
-        command.ExecuteNonQuery();
+        if (!ModelState.IsValid)
+        {
+            return Page();
+        }
 
-        return RedirectToPage("./Index");
+        try
+        {
+            SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnectionString"));
+            connection.Open();
+
+            string query = $"UPDATE drinking_water SET Date = '{DrinkingWater.Date}', Quantity = {DrinkingWater.Quantity} WHERE Id = {DrinkingWater.Id}";
+            SqlCommand command = new(query, connection);
+            command.ExecuteNonQuery();
+
+            connection.Close();
+            return RedirectToPage("./Index");
+        }
+        catch (Exception)
+        {
+            return RedirectToPage("./Error");
+        }
     }
 }
