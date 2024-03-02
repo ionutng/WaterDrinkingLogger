@@ -1,20 +1,56 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Data.SqlClient;
+using WaterDrinkingLogger.Models;
 
 namespace WaterDrinkingLogger.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
+        private readonly IConfiguration _configuration;
+        public List<DrinkingWaterModel> Records { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(IConfiguration configuration)
         {
-            _logger = logger;
+            _configuration = configuration;
         }
 
         public void OnGet()
         {
+            Records = GetAllRecords();
+        }
 
+        private List<DrinkingWaterModel> GetAllRecords()
+        {
+            try
+            {
+                SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnectionString"));
+                connection.Open();
+                string query = $"SELECT * FROM drinking_water";
+                SqlCommand command = new(query, connection);
+
+                var tableData = new List<DrinkingWaterModel>();
+                SqlDataReader reader = command.ExecuteReader();
+            
+                while (reader.Read())
+                {
+                    tableData.Add(
+                        new DrinkingWaterModel
+                        {
+                            Id = reader.GetInt32(0),
+                            Date = DateOnly.FromDateTime(reader.GetDateTime(1)),
+                            Quantity = reader.GetInt32(2),
+                        });
+                }
+            
+                connection.Close();
+            
+                return tableData;
+            }
+            catch (Exception)
+            {
+                return [];
+            }
         }
     }
 }
