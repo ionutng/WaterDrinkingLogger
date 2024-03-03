@@ -19,4 +19,54 @@ html {
 
 body {
   margin-bottom: 60px;
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+.logo {
+    width: 80px;
+    border-radius: 12px;
+}
+
+.background {
+    position: relative;
+    z-index: 1;
+    height: 100vh;
+}
+
+.background::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image: url(https://img.freepik.com/free-photo/crystal-clear-water-with-ice_144627-16293.jpg?w=1800&t=st=1709456895~exp=1709457495~hmac=0027988ddbab8eeb60decb7b4cf880318a4e65ce1ea44613764bd6d85483001c);
+    opacity: .6;
+    background-size: cover;
+}
+
+.btn-success {
+    background-color: #526AC4;
+}
+
+.btn-success:hover {
+    background-color: darkcyan;
+}
+
+.btn-danger {
+    background-color: darkgrey;
+    border-color: darkgrey;
+    color: black;
+}
+
+.btn-primary {
+    background-color: white;
+    color: black;
+    border-color: white;
+}
+
+.form-group {
+    margin-bottom: 16px;
 }
