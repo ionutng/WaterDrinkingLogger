@@ -18,6 +18,7 @@ namespace WaterDrinkingLogger.Pages
         public void OnGet()
         {
             Records = GetAllRecords();
+            ViewData["Total"] = Records.AsEnumerable().Sum(x => x.Quantity);
         }
 
         private List<DrinkingWaterModel> GetAllRecords()
@@ -39,7 +40,7 @@ namespace WaterDrinkingLogger.Pages
                         {
                             Id = reader.GetInt32(0),
                             Date = DateOnly.FromDateTime(reader.GetDateTime(1)),
-                            Quantity = reader.GetInt32(2),
+                            Quantity = reader.GetDouble(2),
                         });
                 }
             
@@ -47,8 +48,9 @@ namespace WaterDrinkingLogger.Pages
             
                 return tableData;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return [];
             }
         }
