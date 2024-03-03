@@ -18,7 +18,7 @@ namespace WaterDrinkingLogger.Pages
         public void OnGet()
         {
             Records = GetAllRecords();
-            ViewData["Total"] = Records.AsEnumerable().Sum(x => x.Quantity);
+            ViewData["Total"] = Records.AsEnumerable().Sum(x => x.Quantity * GetMeasureAmount(x.Measure));
         }
 
         private List<DrinkingWaterModel> GetAllRecords()
@@ -41,6 +41,7 @@ namespace WaterDrinkingLogger.Pages
                             Id = reader.GetInt32(0),
                             Date = DateOnly.FromDateTime(reader.GetDateTime(1)),
                             Quantity = reader.GetDouble(2),
+                            Measure = reader.GetString(3),
                         });
                 }
             
@@ -53,6 +54,18 @@ namespace WaterDrinkingLogger.Pages
                 Console.WriteLine(ex.Message);
                 return [];
             }
+        }
+
+        private double GetMeasureAmount(string measure)
+        {
+            if (measure.Trim() == "Glass (250ml)")
+                return 0.250;
+            else if (measure.Trim() == "Bottle (1l)")
+                return 1;
+            else if (measure.Trim() == "Big Bottle (2l)")
+                return 2;
+            else
+                return 0;
         }
     }
 }

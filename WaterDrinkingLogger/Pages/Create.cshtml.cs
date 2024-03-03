@@ -33,7 +33,7 @@ namespace WaterDrinkingLogger.Pages
             {
                 SqlConnection connection = new(_configuration.GetConnectionString("DefaultConnectionString"));
                 connection.Open();
-                string query = $"INSERT INTO drinking_water(Date, Quantity) VALUES ('{DrinkingWater.Date}', {DrinkingWater.Quantity})";
+                string query = $"INSERT INTO drinking_water(Date, Quantity, Measure) VALUES ('{DrinkingWater.Date}', {DrinkingWater.Quantity}, '{DrinkingWater.Measure}')";
                 SqlCommand command = new(query, connection);
                 command.ExecuteNonQuery();
                 connection.Close();

@@ -42,6 +42,7 @@ public class DeleteModel : PageModel
                 drinkingWaterRecord.Id = reader.GetInt32(0);
                 drinkingWaterRecord.Date = DateOnly.FromDateTime(reader.GetDateTime(1));
                 drinkingWaterRecord.Quantity = reader.GetDouble(2);
+                drinkingWaterRecord.Measure = reader.GetString(3);
             }
 
             connection.Close();
